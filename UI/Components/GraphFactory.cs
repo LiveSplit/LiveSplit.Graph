@@ -17,7 +17,7 @@ namespace LiveSplit.UI.Components
 
         public string Description
         {
-            get { return ""; }
+            get { return "Shows a graph of the current run in relation to a comparison."; }
         }
 
         public ComponentCategory Category
