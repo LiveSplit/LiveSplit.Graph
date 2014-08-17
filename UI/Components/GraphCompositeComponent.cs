@@ -105,5 +105,9 @@ namespace LiveSplit.UI.Components
             if (invalidator != null)
                 InternalComponent.Update(invalidator, state, width, height, mode);
         }
+
+        public void Dispose()
+        {
+        }
     }
 }

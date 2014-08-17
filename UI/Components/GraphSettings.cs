@@ -111,8 +111,8 @@ namespace LiveSplit.UI.Components
                 version = Version.Parse(element["Version"].InnerText);
             else
                 version = new Version(1, 0, 0, 0);
-            GraphHeight = Single.Parse(element["Height"].InnerText);
-            GraphWidth = Single.Parse(element["Width"].InnerText);
+            GraphHeight = Single.Parse(element["Height"].InnerText.Replace(',','.'), CultureInfo.InvariantCulture);
+            GraphWidth = Single.Parse(element["Width"].InnerText.Replace(',', '.'), CultureInfo.InvariantCulture);
             BehindGraphColor = ParseColor(element["BehindGraphColor"]);
             AheadGraphColor = ParseColor(element["AheadGraphColor"]);
             GridlinesColor = ParseColor(element["GridlinesColor"]);
@@ -206,6 +206,13 @@ namespace LiveSplit.UI.Components
         {
             var element = document.CreateElement(name);
             element.InnerText = value.ToString();
+            return element;
+        }
+
+        private XmlElement ToElement(XmlDocument document, String name, float value)
+        {
+            var element = document.CreateElement(name);
+            element.InnerText = value.ToString(CultureInfo.InvariantCulture);
             return element;
         }
     }
