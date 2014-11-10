@@ -83,83 +83,11 @@ namespace LiveSplit.UI.Components
         }
         private void DrawGraph(Graphics g, LiveSplitState state, float width, float height)
         {
-            var newDeltas = new List<TimeSpan?>();
-            TimeSpan? finalSplit = TimeSpan.Zero;
-            var maxDelta = TimeSpan.Zero;
-            var minDelta = TimeSpan.Zero;
-            var isBestSegment = false;
-
             var comparison = Settings.Comparison == "Current Comparison" ? state.CurrentComparison : Settings.Comparison;
             if (!state.Run.Comparisons.Contains(comparison))
                 comparison = state.CurrentComparison;
-            // Calculate newDeltas for Graph
-            newDeltas.Clear();
-            maxDelta = TimeSpan.Zero;
-            minDelta = TimeSpan.Zero;
 
-            finalSplit = TimeSpan.Zero;
-            if (Settings.IsLiveGraph)
-            {
-                if (state.CurrentPhase != TimerPhase.NotRunning)
-                    finalSplit = state.CurrentTime[state.CurrentTimingMethod];
-            }
-            else
-            {
-                foreach (var segment in state.Run)
-                {
-                    if (segment.SplitTime[state.CurrentTimingMethod] != null)
-                        finalSplit = segment.SplitTime[state.CurrentTimingMethod];
-                }
-            }
-            int nonNullnewDeltas = 0;
-            for (int x = 0; x < state.Run.Count; x++)
-            {
-                if (state.Run[x].SplitTime[state.CurrentTimingMethod] != null
-                        && state.Run[x].Comparisons[comparison][state.CurrentTimingMethod] != null)
-                {
-                    TimeSpan time = state.Run[x].SplitTime[state.CurrentTimingMethod].Value
-                            - state.Run[x].Comparisons[comparison][state.CurrentTimingMethod].Value;
-                    if (time > maxDelta)
-                        maxDelta = time;
-                    if (time < minDelta)
-                        minDelta = time;
-                    newDeltas.Add(time);
-                    nonNullnewDeltas++;
-                }
-                else
-                {
-                    newDeltas.Add(null);
-                }
-            }
-
-            isBestSegment = false;
-            if (Settings.IsLiveGraph)
-            {
-                if (state.CurrentPhase == TimerPhase.Running || state.CurrentPhase == TimerPhase.Paused)
-                {
-                    TimeSpan? bestSeg = LiveSplitStateHelper.CheckBestSegment(state, false, state.LayoutSettings.ShowBestSegments, comparison, state.CurrentTimingMethod);
-                    if (bestSeg == null
-                            && (state.Run[state.CurrentSplitIndex].Comparisons[comparison][state.CurrentTimingMethod] != null &&
-                                    state.CurrentTime[state.CurrentTimingMethod]
-                                    - state.Run[state.CurrentSplitIndex].Comparisons[comparison][state.CurrentTimingMethod] > minDelta))
-                    {
-                        bestSeg = state.CurrentTime[state.CurrentTimingMethod]
-                                - state.Run[state.CurrentSplitIndex].Comparisons[comparison][state.CurrentTimingMethod];
-                    }
-                    if (bestSeg != null)
-                    {
-                        if (bestSeg > maxDelta)
-                            maxDelta = bestSeg.Value;
-                        if (bestSeg < minDelta)
-                            minDelta = bestSeg.Value;
-                        newDeltas.Add(bestSeg);
-                        isBestSegment = true;
-                        nonNullnewDeltas++;
-                    }
-                }
-            }
-
-            TimeSpan TotalDelta = minDelta - maxDelta;
+            TimeSpan TotalDelta = MinDelta - MaxDelta;
             //Calculate middle and graph edge
             float graphEdge = 0;
             float GraphHeight = (height) / 2.0f;
@@ -168,7 +96,7 @@ namespace LiveSplit.UI.Components
             {
                 graphEdge = (float)((GraphEdgeValue.TotalMilliseconds / (-TotalDelta.TotalMilliseconds + GraphEdgeValue.TotalMilliseconds * 2)) * (GraphHeight * 2 - GraphEdgeMin * 2));
                 graphEdge += GraphEdgeMin;
-                Middle = (float)(-(maxDelta.TotalMilliseconds / TotalDelta.TotalMilliseconds)
+                Middle = (float)(-(MaxDelta.TotalMilliseconds / TotalDelta.TotalMilliseconds)
                         * (GraphHeight - graphEdge) * 2 + graphEdge);
             }
             // Draw Green and Red Graph Portions
@@ -182,14 +110,14 @@ namespace LiveSplit.UI.Components
                             - Middle);
             // Calculate Gridlines
             double gridValueX, gridValueY;
-            if (state.CurrentPhase != TimerPhase.NotRunning && finalSplit.Value > TimeSpan.Zero)
+            if (state.CurrentPhase != TimerPhase.NotRunning && FinalSplit.Value > TimeSpan.Zero)
             {
                 gridValueX = 1000;
-                while (finalSplit.Value.TotalMilliseconds / gridValueX > width / 20)
+                while (FinalSplit.Value.TotalMilliseconds / gridValueX > width / 20)
                 {
                     gridValueX *= 6;
                 }
-                gridValueX = (gridValueX / finalSplit.Value.TotalMilliseconds) * width;
+                gridValueX = (gridValueX / FinalSplit.Value.TotalMilliseconds) * width;
             }
             else
             {
@@ -243,11 +171,11 @@ namespace LiveSplit.UI.Components
                 pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
                 pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
                 var circleList = new List<PointF>();
-                if (newDeltas.Count > 0)
+                if (Deltas.Count > 0)
                 {
                     float heightOne = GraphHeight;
                     if (TotalDelta != TimeSpan.Zero)
-                        heightOne = (float)(((-maxDelta.TotalMilliseconds) / TotalDelta.TotalMilliseconds)
+                        heightOne = (float)(((-MaxDelta.TotalMilliseconds) / TotalDelta.TotalMilliseconds)
                             * (GraphHeight - graphEdge) * 2 + graphEdge);
                     float heightTwo = 0;
                     float widthOne = 0;
@@ -255,28 +183,28 @@ namespace LiveSplit.UI.Components
                     int x = -1, y = -1;
                     var pointArray = new List<PointF>();
                     pointArray.Add(new PointF(0, Middle));
-                    while (y < newDeltas.Count - 1)
+                    while (y < Deltas.Count - 1)
                     {
                         y++;
-                        while (newDeltas[y] == null && y < newDeltas.Count - 1)
+                        while (Deltas[y] == null && y < Deltas.Count - 1)
                         {
                             y++;
                         }
-                        if (newDeltas[y] != null)
+                        if (Deltas[y] != null)
                         {
-                            if (y == newDeltas.Count - 1 && isBestSegment)
+                            if (y == Deltas.Count - 1 && IsBestSegment)
                                 widthTwo = width;
-                            else
-                                widthTwo = (float)((state.Run[y].SplitTime[state.CurrentTimingMethod].Value.TotalMilliseconds / finalSplit.Value.TotalMilliseconds) * (width));
+                            else if (state.Run[y].SplitTime[state.CurrentTimingMethod] != null)
+                                widthTwo = (float)((state.Run[y].SplitTime[state.CurrentTimingMethod].Value.TotalMilliseconds / FinalSplit.Value.TotalMilliseconds) * (width));
                             if (TotalDelta != TimeSpan.Zero)
-                                heightTwo = (float)((newDeltas[y].Value.TotalMilliseconds - maxDelta.TotalMilliseconds) / TotalDelta.TotalMilliseconds
+                                heightTwo = (float)((Deltas[y].Value.TotalMilliseconds - MaxDelta.TotalMilliseconds) / TotalDelta.TotalMilliseconds
                                     * (GraphHeight - graphEdge) * 2 + graphEdge);
                             else
                                 heightTwo = GraphHeight;
                             // Draw fill beneath graph
                             if ((heightTwo - Middle) / (heightOne - Middle) > 0)
                             {
-                                if (y == newDeltas.Count - 1 && isBestSegment)
+                                if (y == Deltas.Count - 1 && IsBestSegment)
                                 {
                                     brush.Color = heightTwo > Middle ? Settings.PartialFillColorAhead : Settings.PartialFillColorBehind;
                                     g2.FillPolygon(brush, new PointF[] 
@@ -295,7 +223,7 @@ namespace LiveSplit.UI.Components
                             else
                             {
                                 var ratio = (heightOne - Middle) / (heightOne - heightTwo);
-                                if (y == newDeltas.Count - 1 && isBestSegment)
+                                if (y == Deltas.Count - 1 && IsBestSegment)
                                 {
                                     brush.Color = heightOne > Middle ? Settings.PartialFillColorAhead : Settings.PartialFillColorBehind;
                                     if (TotalDelta != TimeSpan.Zero)
@@ -315,7 +243,7 @@ namespace LiveSplit.UI.Components
                                     g2.FillPolygon(brush, pointArray.ToArray());
                                     brush.Color = heightOne > Middle ? Settings.CompleteFillColorAhead : Settings.CompleteFillColorBehind;
                                 }
-                                if (y == newDeltas.Count - 1 && isBestSegment)
+                                if (y == Deltas.Count - 1 && IsBestSegment)
                                 {
                                     brush.Color = heightTwo > Middle ? Settings.PartialFillColorAhead : Settings.PartialFillColorBehind;
                                     if (TotalDelta != TimeSpan.Zero)
@@ -338,7 +266,7 @@ namespace LiveSplit.UI.Components
 
                             }
 
-                            if (y == newDeltas.Count - 1)
+                            if (y == Deltas.Count - 1)
                             {
                                 pointArray.Add(new PointF(pointArray.Last().X, Middle));
                                 if (pointArray.Count > 1)
@@ -350,12 +278,12 @@ namespace LiveSplit.UI.Components
 
                             x = y;
                             if (TotalDelta != TimeSpan.Zero)
-                                heightOne = (float)((newDeltas[x].Value.TotalMilliseconds - maxDelta.TotalMilliseconds) / TotalDelta.TotalMilliseconds)
+                                heightOne = (float)((Deltas[x].Value.TotalMilliseconds - MaxDelta.TotalMilliseconds) / TotalDelta.TotalMilliseconds)
                                     * (GraphHeight - graphEdge) * 2 + graphEdge;
                             else
                                 heightOne = GraphHeight;
-                            if (x != newDeltas.Count - 1)
-                                widthOne = (float)((state.Run[x].SplitTime[state.CurrentTimingMethod].Value.TotalMilliseconds / finalSplit.Value.TotalMilliseconds) * (width));
+                            if (x != Deltas.Count - 1 && state.Run[x].SplitTime[state.CurrentTimingMethod] != null)
+                                widthOne = (float)((state.Run[x].SplitTime[state.CurrentTimingMethod].Value.TotalMilliseconds / FinalSplit.Value.TotalMilliseconds) * (width));
                         }
                         else
                         {
@@ -369,7 +297,7 @@ namespace LiveSplit.UI.Components
                     }
                     heightOne = GraphHeight;
                     if (TotalDelta != TimeSpan.Zero)
-                        heightOne = (float)(((-maxDelta.TotalMilliseconds) / TotalDelta.TotalMilliseconds)
+                        heightOne = (float)(((-MaxDelta.TotalMilliseconds) / TotalDelta.TotalMilliseconds)
                             * (GraphHeight - graphEdge) * 2 + graphEdge);
                     heightTwo = 0;
                     widthOne = 0;
@@ -377,21 +305,21 @@ namespace LiveSplit.UI.Components
                     x = -1;
                     y = -1;
 
-                    while (y < newDeltas.Count - 1)
+                    while (y < Deltas.Count - 1)
                     {
                         y++;
-                        while (newDeltas[y] == null && y < newDeltas.Count - 1)
+                        while (Deltas[y] == null && y < Deltas.Count - 1)
                         {
                             y++;
                         }
-                        if (newDeltas[y] != null)
+                        if (Deltas[y] != null)
                         {
-                            if (y == newDeltas.Count - 1 && isBestSegment)
+                            if (y == Deltas.Count - 1 && IsBestSegment)
                                 widthTwo = width;
-                            else
-                                widthTwo = (float)((state.Run[y].SplitTime[state.CurrentTimingMethod].Value.TotalMilliseconds / finalSplit.Value.TotalMilliseconds) * (width));
+                            else if (state.Run[y].SplitTime[state.CurrentTimingMethod] != null)
+                                widthTwo = (float)((state.Run[y].SplitTime[state.CurrentTimingMethod].Value.TotalMilliseconds / FinalSplit.Value.TotalMilliseconds) * (width));
                             if (TotalDelta != TimeSpan.Zero)
-                                heightTwo = (float)((newDeltas[y].Value.TotalMilliseconds - maxDelta.TotalMilliseconds) / TotalDelta.TotalMilliseconds
+                                heightTwo = (float)((Deltas[y].Value.TotalMilliseconds - MaxDelta.TotalMilliseconds) / TotalDelta.TotalMilliseconds
                                     * (GraphHeight - graphEdge) * 2 + graphEdge);
                             else
                                 heightTwo = GraphHeight;
@@ -403,12 +331,12 @@ namespace LiveSplit.UI.Components
                             circleList.Add(new PointF(widthTwo, heightTwo));
                             x = y;
                             if (TotalDelta != TimeSpan.Zero)
-                                heightOne = (float)((newDeltas[x].Value.TotalMilliseconds - maxDelta.TotalMilliseconds) / TotalDelta.TotalMilliseconds)
+                                heightOne = (float)((Deltas[x].Value.TotalMilliseconds - MaxDelta.TotalMilliseconds) / TotalDelta.TotalMilliseconds)
                                     * (GraphHeight - graphEdge) * 2 + graphEdge;
                             else
                                 heightOne = GraphHeight;
-                            if (x != newDeltas.Count - 1)
-                                widthOne = (float)((state.Run[x].SplitTime[state.CurrentTimingMethod].Value.TotalMilliseconds / finalSplit.Value.TotalMilliseconds) * (width));
+                            if (x != Deltas.Count - 1 && state.Run[x].SplitTime[state.CurrentTimingMethod] != null)
+                                widthOne = (float)((state.Run[x].SplitTime[state.CurrentTimingMethod].Value.TotalMilliseconds / FinalSplit.Value.TotalMilliseconds) * (width));
                         }
                     }
 
@@ -416,7 +344,7 @@ namespace LiveSplit.UI.Components
                     brush.Color = Settings.GraphColor;
                     foreach (var circle in circleList)
                     {
-                        if (circle.X != width || !isBestSegment)
+                        if (circle.X != width || !IsBestSegment)
                         {
                             DrawEllipseShadowed(g2, brush, circle.X - 2.5f, circle.Y - 2.5f, 5, 5, Settings.FlipGraph);
                         }
