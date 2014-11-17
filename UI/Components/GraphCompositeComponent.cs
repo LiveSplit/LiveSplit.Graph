@@ -38,6 +38,14 @@ namespace LiveSplit.UI.Components
             components.Add(new GraphComponent(Settings));
             components.Add(new GraphSeparatorComponent(Settings) { LockToBottom = false });
             InternalComponent.VisibleComponents = components;
+            state.ComparisonRenamed += state_ComparisonRenamed;
+        }
+
+        void state_ComparisonRenamed(object sender, EventArgs e)
+        {
+            var args = (RenameEventArgs)e;
+            if (Settings.Comparison == args.OldName)
+                Settings.Comparison = args.NewName;
         }
 
         public Control GetSettingsControl(LayoutMode mode)
@@ -91,14 +99,6 @@ namespace LiveSplit.UI.Components
         {
             InternalComponent.DrawVertical(g, state, width, clipRegion);
         }
-
-
-        public void RenameComparison(string oldName, string newName)
-        {
-            if (Settings.Comparison == oldName)
-                Settings.Comparison = newName;
-        }
-
 
         public void Update(IInvalidator invalidator, LiveSplitState state, float width, float height, LayoutMode mode)
         {

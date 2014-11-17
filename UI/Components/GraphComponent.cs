@@ -451,11 +451,6 @@ namespace LiveSplit.UI.Components
             throw new NotImplementedException();
         }
 
-
-        public void RenameComparison(string oldName, string newName)
-        {
-        }
-
         protected void Calculate(LiveSplitState state)
         {
             var comparison = Settings.Comparison == "Current Comparison" ? state.CurrentComparison : Settings.Comparison;
