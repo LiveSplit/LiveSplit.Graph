@@ -501,7 +501,7 @@ namespace LiveSplit.UI.Components
             {
                 if (state.CurrentPhase == TimerPhase.Running || state.CurrentPhase == TimerPhase.Paused)
                 {
-                    TimeSpan? bestSeg = LiveSplitStateHelper.CheckBestSegment(state, false, state.LayoutSettings.ShowBestSegments, comparison, state.CurrentTimingMethod);
+                    TimeSpan? bestSeg = LiveSplitStateHelper.CheckLiveDelta(state, false, comparison, state.CurrentTimingMethod);
                     if (bestSeg == null
                             && (state.Run[state.CurrentSplitIndex].Comparisons[comparison][state.CurrentTimingMethod] != null &&
                                     state.CurrentTime[state.CurrentTimingMethod]
