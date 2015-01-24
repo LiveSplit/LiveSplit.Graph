@@ -377,7 +377,7 @@ namespace LiveSplit.UI.Components
                     x = -1;
                     y = -1;
 
-                    while (y < newDeltas.Count - 1)
+                   while (y < newDeltas.Count - 1)
                     {
                         y++;
                         while (newDeltas[y] == null && y < newDeltas.Count - 1)
@@ -397,6 +397,7 @@ namespace LiveSplit.UI.Components
                                 heightTwo = GraphHeight;
 
                             pen.Color = Settings.GraphColor;
+                            if ((y != newDeltas.Count - 1 || !isBestSegment) && bestSegment(state, y, comparison, state.CurrentTimingMethod)) pen.Color = Settings.GraphGoldColor;
                             // Draw graph line
                             DrawLineShadowed(g2, pen, widthOne, heightOne, widthTwo, heightTwo, Settings.FlipGraph);
                             // Add circles for later
@@ -413,13 +414,16 @@ namespace LiveSplit.UI.Components
                     }
 
 
-                    brush.Color = Settings.GraphColor;
+                    int i = 0;
                     foreach (var circle in circleList)
                     {
+                        brush.Color = Settings.GraphColor;
+                        if (bestSegment(state, i, comparison, state.CurrentTimingMethod)) brush.Color = Settings.GraphGoldColor;
                         if (circle.X != width || !isBestSegment)
                         {
                             DrawEllipseShadowed(g2, brush, circle.X - 2.5f, circle.Y - 2.5f, 5, 5, Settings.FlipGraph);
                         }
+                        i++;
                     }
                 }
             }
@@ -427,6 +431,18 @@ namespace LiveSplit.UI.Components
             {
                 Log.Error(ex);
             }
+        }
+
+        public bool bestSegment(LiveSplitState state, int splitNumber, string comparison, TimingMethod method)
+        {
+            TimeSpan? curSegment;
+            curSegment = LiveSplitStateHelper.GetPreviousSegment(state, splitNumber, false, true, true, comparison, method);
+            if (curSegment != null)
+            {
+                if (state.Run[splitNumber].BestSegmentTime[method] == null || curSegment < state.Run[splitNumber].BestSegmentTime[method])
+                    return true;
+            }
+            return false;
         }
 
         public void DrawVertical(Graphics g, LiveSplitState state, float width, Region clipRegion)

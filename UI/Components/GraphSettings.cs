@@ -30,8 +30,10 @@ namespace LiveSplit.UI.Components
         public Color PartialFillColorAhead { get; set; }
         public Color CompleteFillColorAhead { get; set; }
         public Color GraphColor { get; set; }
+        public Color GraphGoldColor { get; set; }
         public Color ShadowsColor { get; set; }
         public Color GraphLinesColor { get; set; }
+        public Color GraphLinesGoldColor { get; set; }
 
         public bool IsLiveGraph { get; set; }
         public bool FlipGraph { get; set; }
@@ -54,8 +56,10 @@ namespace LiveSplit.UI.Components
             PartialFillColorAhead = Color.FromArgb(25, 255, 255, 255);
             CompleteFillColorAhead = Color.FromArgb(50, 255, 255, 255);
             GraphColor = Color.White;
+            GraphGoldColor = Color.Gold;
             ShadowsColor = Color.FromArgb(0x38, 0x0, 0x0, 0x0);
             GraphLinesColor = Color.White;
+            GraphLinesGoldColor = Color.Gold;
             IsLiveGraph = true;
             FlipGraph = false;
             Comparison = "Current Comparison";
