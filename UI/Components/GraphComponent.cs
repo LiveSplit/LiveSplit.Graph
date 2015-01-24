@@ -363,12 +363,15 @@ namespace LiveSplit.UI.Components
 
         public bool CheckBestSegment(LiveSplitState state, int splitNumber, string comparison, TimingMethod method)
         {
-            TimeSpan? curSegment;
-            curSegment = LiveSplitStateHelper.GetPreviousSegment(state, splitNumber, false, true, comparison, method);
-            if (curSegment != null)
+            if (Settings.ShowBestSegments)
             {
-                if (state.Run[splitNumber].BestSegmentTime[method] == null || curSegment < state.Run[splitNumber].BestSegmentTime[method])
-                    return true;
+                TimeSpan? curSegment;
+                curSegment = LiveSplitStateHelper.GetPreviousSegment(state, splitNumber, false, true, comparison, method);
+                if (curSegment != null)
+                {
+                    if (state.Run[splitNumber].BestSegmentTime[method] == null || curSegment < state.Run[splitNumber].BestSegmentTime[method])
+                        return true;
+                }
             }
             return false;
         }
