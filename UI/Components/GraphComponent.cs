@@ -325,6 +325,7 @@ namespace LiveSplit.UI.Components
                                 heightTwo = GraphHeight;
 
                             pen.Color = Settings.GraphColor;
+                            if ((y != Deltas.Count - 1 || !IsBestSegment) && CheckBestSegment(state, y, comparison, state.CurrentTimingMethod)) pen.Color = Settings.GraphGoldColor;
                             // Draw graph line
                             DrawLineShadowed(g2, pen, widthOne, heightOne, widthTwo, heightTwo, Settings.FlipGraph);
                             // Add circles for later
@@ -341,13 +342,16 @@ namespace LiveSplit.UI.Components
                     }
 
 
-                    brush.Color = Settings.GraphColor;
+                    int i = 0;
                     foreach (var circle in circleList)
                     {
+                        brush.Color = Settings.GraphColor;
+                        if (CheckBestSegment(state, i, comparison, state.CurrentTimingMethod)) brush.Color = Settings.GraphGoldColor;
                         if (circle.X != width || !IsBestSegment)
                         {
                             DrawEllipseShadowed(g2, brush, circle.X - 2.5f, circle.Y - 2.5f, 5, 5, Settings.FlipGraph);
                         }
+                        i++;
                     }
                 }
             }
@@ -355,6 +359,21 @@ namespace LiveSplit.UI.Components
             {
                 Log.Error(ex);
             }
+        }
+
+        public bool CheckBestSegment(LiveSplitState state, int splitNumber, string comparison, TimingMethod method)
+        {
+            if (Settings.ShowBestSegments)
+            {
+                TimeSpan? curSegment;
+                curSegment = LiveSplitStateHelper.GetPreviousSegment(state, splitNumber, false, true, comparison, method);
+                if (curSegment != null)
+                {
+                    if (state.Run[splitNumber].BestSegmentTime[method] == null || curSegment < state.Run[splitNumber].BestSegmentTime[method])
+                        return true;
+                }
+            }
+            return false;
         }
 
         public void DrawVertical(Graphics g, LiveSplitState state, float width, Region clipRegion)

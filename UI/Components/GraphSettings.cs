@@ -30,11 +30,13 @@ namespace LiveSplit.UI.Components
         public Color PartialFillColorAhead { get; set; }
         public Color CompleteFillColorAhead { get; set; }
         public Color GraphColor { get; set; }
+        public Color GraphGoldColor { get; set; }
         public Color ShadowsColor { get; set; }
         public Color GraphLinesColor { get; set; }
 
         public bool IsLiveGraph { get; set; }
         public bool FlipGraph { get; set; }
+        public bool ShowBestSegments { get; set; }
 
         public LayoutMode Mode { get; set; }
 
@@ -54,10 +56,12 @@ namespace LiveSplit.UI.Components
             PartialFillColorAhead = Color.FromArgb(25, 255, 255, 255);
             CompleteFillColorAhead = Color.FromArgb(50, 255, 255, 255);
             GraphColor = Color.White;
+            GraphGoldColor = Color.FromArgb(216, 175, 31);
             ShadowsColor = Color.FromArgb(0x38, 0x0, 0x0, 0x0);
             GraphLinesColor = Color.White;
             IsLiveGraph = true;
             FlipGraph = false;
+            ShowBestSegments = false;
             Comparison = "Current Comparison";
 
             btnAheadColor.DataBindings.Add("BackColor", this, "AheadGraphColor", false, DataSourceUpdateMode.OnPropertyChanged);
@@ -70,11 +74,19 @@ namespace LiveSplit.UI.Components
             btnGraphColor.DataBindings.Add("BackColor", this, "GraphColor", false, DataSourceUpdateMode.OnPropertyChanged);
             btnShadowsColor.DataBindings.Add("BackColor", this, "ShadowsColor", false, DataSourceUpdateMode.OnPropertyChanged);
             btnSeparatorsColor.DataBindings.Add("BackColor", this, "GraphLinesColor", false, DataSourceUpdateMode.OnPropertyChanged);
+            btnBestSegmentColor.DataBindings.Add("BackColor", this, "GraphGoldColor", false, DataSourceUpdateMode.OnPropertyChanged);
             chkLiveGraph.DataBindings.Add("Checked", this, "IsLiveGraph", false, DataSourceUpdateMode.OnPropertyChanged);
             chkFlipGraph.DataBindings.Add("Checked", this, "FlipGraph", false, DataSourceUpdateMode.OnPropertyChanged);
+            chkShowBestSegments.DataBindings.Add("Checked", this, "ShowBestSegments", false, DataSourceUpdateMode.OnPropertyChanged);
+            chkShowBestSegments.CheckedChanged += chkShowBestSegments_CheckedChanged;
             cmbComparison.SelectedIndexChanged += cmbComparison_SelectedIndexChanged;
             cmbComparison.DataBindings.Add("SelectedItem", this, "Comparison", false, DataSourceUpdateMode.OnPropertyChanged);
             this.Load += GraphSettings_Load;
+        }
+
+        void chkShowBestSegments_CheckedChanged(object sender, EventArgs e)
+        {
+            btnBestSegmentColor.Enabled = lblBestSegmentColor.Enabled = chkShowBestSegments.Checked;
         }
         void cmbComparison_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -134,6 +146,16 @@ namespace LiveSplit.UI.Components
                 FlipGraph = false;
                 Comparison = "Current Comparison";
             }
+            if (version >= new Version(1, 5))
+            {
+                ShowBestSegments = Boolean.Parse(element["ShowBestSegments"].InnerText);
+                GraphGoldColor = ParseColor(element["GraphGoldColor"]);
+            }
+            else
+            {
+                GraphGoldColor = Color.Gold;
+                ShowBestSegments = false;
+            }
             GraphColor = ParseColor(element["GraphColor"]);
             ShadowsColor = ParseColor(element["ShadowsColor"]);
             GraphLinesColor = ParseColor(element["GraphLinesColor"]);
@@ -143,7 +165,7 @@ namespace LiveSplit.UI.Components
         public XmlNode GetSettings (XmlDocument document)
         {
             var parent = document.CreateElement("Settings");
-            parent.AppendChild(ToElement(document, "Version", "1.2"));
+            parent.AppendChild(ToElement(document, "Version", "1.5"));
             parent.AppendChild(ToElement(document, "Height", GraphHeight));
             parent.AppendChild(ToElement(document, "Width", GraphWidth));
             parent.AppendChild(ToElement(document, BehindGraphColor, "BehindGraphColor"));
@@ -159,6 +181,8 @@ namespace LiveSplit.UI.Components
             parent.AppendChild(ToElement(document, "LiveGraph", IsLiveGraph));
             parent.AppendChild(ToElement(document, "FlipGraph", FlipGraph));
             parent.AppendChild(ToElement(document, "Comparison", Comparison));
+            parent.AppendChild(ToElement(document, "ShowBestSegments", ShowBestSegments));
+            parent.AppendChild(ToElement(document, GraphGoldColor, "GraphGoldColor"));
             return parent;
         }
 
