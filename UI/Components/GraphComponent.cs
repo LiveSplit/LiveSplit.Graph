@@ -345,6 +345,9 @@ namespace LiveSplit.UI.Components
                     int i = 0;
                     foreach (var circle in circleList)
                     {
+                        //Skip i with the skipped splits, so that i is still correct
+                        i += Deltas.Skip(i).TakeWhile(delta => delta == null).Count();
+
                         brush.Color = Settings.GraphColor;
                         if (CheckBestSegment(state, i, comparison, state.CurrentTimingMethod)) brush.Color = Settings.GraphGoldColor;
                         if (circle.X != width || !IsBestSegment)
