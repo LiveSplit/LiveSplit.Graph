@@ -349,9 +349,10 @@ namespace LiveSplit.UI.Components
                         i += Deltas.Skip(i).TakeWhile(delta => delta == null).Count();
 
                         brush.Color = Settings.GraphColor;
-                        if (CheckBestSegment(state, i, comparison, state.CurrentTimingMethod)) brush.Color = Settings.GraphGoldColor;
                         if (circle.X != width || !IsBestSegment)
                         {
+                            if (CheckBestSegment(state, i, comparison, state.CurrentTimingMethod)) 
+                                brush.Color = Settings.GraphGoldColor;
                             DrawEllipseShadowed(g2, brush, circle.X - 2.5f, circle.Y - 2.5f, 5, 5, Settings.FlipGraph);
                         }
                         i++;
