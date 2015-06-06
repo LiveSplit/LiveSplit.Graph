@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.btnBestSegmentColor = new System.Windows.Forms.Button();
             this.heightLabel = new System.Windows.Forms.Label();
             this.btnBehindColor = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -57,7 +58,6 @@
             this.label12 = new System.Windows.Forms.Label();
             this.chkShowBestSegments = new System.Windows.Forms.CheckBox();
             this.lblBestSegmentColor = new System.Windows.Forms.Label();
-            this.btnBestSegmentColor = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkHeight)).BeginInit();
             this.SuspendLayout();
@@ -115,6 +115,19 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(462, 263);
             this.tableLayoutPanel1.TabIndex = 0;
+            // 
+            // btnBestSegmentColor
+            // 
+            this.btnBestSegmentColor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnBestSegmentColor.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnBestSegmentColor.Location = new System.Drawing.Point(436, 206);
+            this.btnBestSegmentColor.Name = "btnBestSegmentColor";
+            this.btnBestSegmentColor.Size = new System.Drawing.Size(23, 23);
+            this.btnBestSegmentColor.TabIndex = 13;
+            this.btnBestSegmentColor.UseVisualStyleBackColor = false;
+            this.btnBestSegmentColor.Click += new System.EventHandler(this.ColorButtonClick);
             // 
             // heightLabel
             // 
@@ -289,7 +302,7 @@
             this.chkLiveGraph.Margin = new System.Windows.Forms.Padding(7, 3, 3, 3);
             this.chkLiveGraph.Name = "chkLiveGraph";
             this.chkLiveGraph.Size = new System.Drawing.Size(192, 17);
-            this.chkLiveGraph.TabIndex = 12;
+            this.chkLiveGraph.TabIndex = 14;
             this.chkLiveGraph.Text = "Live Graph";
             this.chkLiveGraph.UseVisualStyleBackColor = true;
             // 
@@ -397,7 +410,7 @@
             this.chkFlipGraph.Margin = new System.Windows.Forms.Padding(7, 3, 3, 3);
             this.chkFlipGraph.Name = "chkFlipGraph";
             this.chkFlipGraph.Size = new System.Drawing.Size(192, 17);
-            this.chkFlipGraph.TabIndex = 13;
+            this.chkFlipGraph.TabIndex = 15;
             this.chkFlipGraph.Text = "Flip Graph";
             this.chkFlipGraph.UseVisualStyleBackColor = true;
             // 
@@ -430,7 +443,7 @@
             this.chkShowBestSegments.Margin = new System.Windows.Forms.Padding(7, 3, 3, 3);
             this.chkShowBestSegments.Name = "chkShowBestSegments";
             this.chkShowBestSegments.Size = new System.Drawing.Size(192, 17);
-            this.chkShowBestSegments.TabIndex = 30;
+            this.chkShowBestSegments.TabIndex = 12;
             this.chkShowBestSegments.Text = "Show Best Segments";
             this.chkShowBestSegments.UseVisualStyleBackColor = true;
             // 
@@ -443,19 +456,6 @@
             this.lblBestSegmentColor.Size = new System.Drawing.Size(144, 13);
             this.lblBestSegmentColor.TabIndex = 31;
             this.lblBestSegmentColor.Text = "Best Segment Color:";
-            // 
-            // btnBestSegmentColor
-            // 
-            this.btnBestSegmentColor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBestSegmentColor.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnBestSegmentColor.Location = new System.Drawing.Point(436, 206);
-            this.btnBestSegmentColor.Name = "btnBestSegmentColor";
-            this.btnBestSegmentColor.Size = new System.Drawing.Size(23, 23);
-            this.btnBestSegmentColor.TabIndex = 32;
-            this.btnBestSegmentColor.UseVisualStyleBackColor = false;
-            this.btnBestSegmentColor.Click += new System.EventHandler(this.ColorButtonClick);
             // 
             // GraphSettings
             // 
