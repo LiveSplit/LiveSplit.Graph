@@ -118,84 +118,60 @@ namespace LiveSplit.UI.Components
         public void SetSettings (XmlNode node)
         {
             var element = (XmlElement)node;
-            Version version;
-            if (element["Version"] != null)
-                version = Version.Parse(element["Version"].InnerText);
-            else
-                version = new Version(1, 0, 0, 0);
-            GraphHeight = Single.Parse(element["Height"].InnerText.Replace(',','.'), CultureInfo.InvariantCulture);
-            GraphWidth = Single.Parse(element["Width"].InnerText.Replace(',', '.'), CultureInfo.InvariantCulture);
-            BehindGraphColor = ParseColor(element["BehindGraphColor"]);
-            AheadGraphColor = ParseColor(element["AheadGraphColor"]);
-            GridlinesColor = ParseColor(element["GridlinesColor"]);
+            Version version = SettingsHelper.ParseVersion(element["Version"]);
+
+            GraphHeight = SettingsHelper.ParseFloat(element["Height"]);
+            GraphWidth = SettingsHelper.ParseFloat(element["Width"]);
+            BehindGraphColor = SettingsHelper.ParseColor(element["BehindGraphColor"]);
+            AheadGraphColor = SettingsHelper.ParseColor(element["AheadGraphColor"]);
+            GridlinesColor = SettingsHelper.ParseColor(element["GridlinesColor"]);
+            FlipGraph = SettingsHelper.ParseBool(element["FlipGraph"], false);
+            Comparison = SettingsHelper.ParseString(element["Comparison"], "Current Comparison");
+            ShowBestSegments = SettingsHelper.ParseBool(element["ShowBestSegments"], false);
+            GraphGoldColor = SettingsHelper.ParseColor(element["GraphGoldColor"], Color.Gold);
+            GraphColor = SettingsHelper.ParseColor(element["GraphColor"]);
+            ShadowsColor = SettingsHelper.ParseColor(element["ShadowsColor"]);
+            GraphLinesColor = SettingsHelper.ParseColor(element["GraphLinesColor"]);
+            IsLiveGraph = SettingsHelper.ParseBool(element["LiveGraph"]);
+
             if (version >= new Version(1, 2))
             {
-                PartialFillColorBehind = ParseColor(element["PartialFillColorBehind"]);
-                CompleteFillColorBehind = ParseColor(element["CompleteFillColorBehind"]);
-                PartialFillColorAhead = ParseColor(element["PartialFillColorAhead"]);
-                CompleteFillColorAhead = ParseColor(element["CompleteFillColorAhead"]);
-                FlipGraph = Boolean.Parse(element["FlipGraph"].InnerText);
-                Comparison = element["Comparison"].InnerText;
+                PartialFillColorBehind = SettingsHelper.ParseColor(element["PartialFillColorBehind"]);
+                CompleteFillColorBehind = SettingsHelper.ParseColor(element["CompleteFillColorBehind"]);
+                PartialFillColorAhead = SettingsHelper.ParseColor(element["PartialFillColorAhead"]);
+                CompleteFillColorAhead = SettingsHelper.ParseColor(element["CompleteFillColorAhead"]);
             }
             else
             {
-                PartialFillColorAhead = ParseColor(element["PartialFillColor"]);
-                PartialFillColorBehind = ParseColor(element["PartialFillColor"]);
-                CompleteFillColorAhead = ParseColor(element["CompleteFillColor"]);
-                CompleteFillColorBehind = ParseColor(element["CompleteFillColor"]);
-                FlipGraph = false;
-                Comparison = "Current Comparison";
+                PartialFillColorAhead = SettingsHelper.ParseColor(element["PartialFillColor"]);
+                PartialFillColorBehind = SettingsHelper.ParseColor(element["PartialFillColor"]);
+                CompleteFillColorAhead = SettingsHelper.ParseColor(element["CompleteFillColor"]);
+                CompleteFillColorBehind = SettingsHelper.ParseColor(element["CompleteFillColor"]);
             }
-            if (version >= new Version(1, 5))
-            {
-                ShowBestSegments = Boolean.Parse(element["ShowBestSegments"].InnerText);
-                GraphGoldColor = ParseColor(element["GraphGoldColor"]);
-            }
-            else
-            {
-                GraphGoldColor = Color.Gold;
-                ShowBestSegments = false;
-            }
-            GraphColor = ParseColor(element["GraphColor"]);
-            ShadowsColor = ParseColor(element["ShadowsColor"]);
-            GraphLinesColor = ParseColor(element["GraphLinesColor"]);
-            IsLiveGraph = Boolean.Parse(element["LiveGraph"].InnerText);
         }
 
         public XmlNode GetSettings (XmlDocument document)
         {
             var parent = document.CreateElement("Settings");
-            parent.AppendChild(ToElement(document, "Version", "1.5"));
-            parent.AppendChild(ToElement(document, "Height", GraphHeight));
-            parent.AppendChild(ToElement(document, "Width", GraphWidth));
-            parent.AppendChild(ToElement(document, BehindGraphColor, "BehindGraphColor"));
-            parent.AppendChild(ToElement(document, AheadGraphColor, "AheadGraphColor"));
-            parent.AppendChild(ToElement(document, GridlinesColor, "GridlinesColor"));
-            parent.AppendChild(ToElement(document, PartialFillColorBehind, "PartialFillColorBehind"));
-            parent.AppendChild(ToElement(document, CompleteFillColorBehind, "CompleteFillColorBehind"));
-            parent.AppendChild(ToElement(document, PartialFillColorAhead, "PartialFillColorAhead"));
-            parent.AppendChild(ToElement(document, CompleteFillColorAhead, "CompleteFillColorAhead"));
-            parent.AppendChild(ToElement(document, GraphColor, "GraphColor"));
-            parent.AppendChild(ToElement(document, ShadowsColor, "ShadowsColor"));
-            parent.AppendChild(ToElement(document, GraphLinesColor, "GraphLinesColor"));
-            parent.AppendChild(ToElement(document, "LiveGraph", IsLiveGraph));
-            parent.AppendChild(ToElement(document, "FlipGraph", FlipGraph));
-            parent.AppendChild(ToElement(document, "Comparison", Comparison));
-            parent.AppendChild(ToElement(document, "ShowBestSegments", ShowBestSegments));
-            parent.AppendChild(ToElement(document, GraphGoldColor, "GraphGoldColor"));
+            parent.AppendChild(SettingsHelper.ToElement(document, "Version", "1.5"));
+            parent.AppendChild(SettingsHelper.ToElement(document, "Height", GraphHeight));
+            parent.AppendChild(SettingsHelper.ToElement(document, "Width", GraphWidth));
+            parent.AppendChild(SettingsHelper.ToElement(document, BehindGraphColor, "BehindGraphColor"));
+            parent.AppendChild(SettingsHelper.ToElement(document, AheadGraphColor, "AheadGraphColor"));
+            parent.AppendChild(SettingsHelper.ToElement(document, GridlinesColor, "GridlinesColor"));
+            parent.AppendChild(SettingsHelper.ToElement(document, PartialFillColorBehind, "PartialFillColorBehind"));
+            parent.AppendChild(SettingsHelper.ToElement(document, CompleteFillColorBehind, "CompleteFillColorBehind"));
+            parent.AppendChild(SettingsHelper.ToElement(document, PartialFillColorAhead, "PartialFillColorAhead"));
+            parent.AppendChild(SettingsHelper.ToElement(document, CompleteFillColorAhead, "CompleteFillColorAhead"));
+            parent.AppendChild(SettingsHelper.ToElement(document, GraphColor, "GraphColor"));
+            parent.AppendChild(SettingsHelper.ToElement(document, ShadowsColor, "ShadowsColor"));
+            parent.AppendChild(SettingsHelper.ToElement(document, GraphLinesColor, "GraphLinesColor"));
+            parent.AppendChild(SettingsHelper.ToElement(document, "LiveGraph", IsLiveGraph));
+            parent.AppendChild(SettingsHelper.ToElement(document, "FlipGraph", FlipGraph));
+            parent.AppendChild(SettingsHelper.ToElement(document, "Comparison", Comparison));
+            parent.AppendChild(SettingsHelper.ToElement(document, "ShowBestSegments", ShowBestSegments));
+            parent.AppendChild(SettingsHelper.ToElement(document, GraphGoldColor, "GraphGoldColor"));
             return parent;
-        }
-
-        private Color ParseColor (XmlElement colorElement)
-        {
-            return Color.FromArgb(Int32.Parse(colorElement.InnerText,NumberStyles.HexNumber));
-        }
-
-        private XmlElement ToElement(XmlDocument document, Color color, string name)
-        {
-            var element = document.CreateElement(name);
-            element.InnerText = color.ToArgb().ToString("X8");
-            return element;
         }
 
         public object Clone()
@@ -224,20 +200,6 @@ namespace LiveSplit.UI.Components
             picker.SelectedColor = picker.OldColor = button.BackColor;            
             picker.ShowDialog(this);
             button.BackColor = picker.SelectedColor;
-        }
-
-        private XmlElement ToElement<T>(XmlDocument document, String name, T value)
-        {
-            var element = document.CreateElement(name);
-            element.InnerText = value.ToString();
-            return element;
-        }
-
-        private XmlElement ToElement(XmlDocument document, String name, float value)
-        {
-            var element = document.CreateElement(name);
-            element.InnerText = value.ToString(CultureInfo.InvariantCulture);
-            return element;
         }
     }
 }
