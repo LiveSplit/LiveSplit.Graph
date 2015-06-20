@@ -465,6 +465,7 @@
             this.Name = "GraphSettings";
             this.Padding = new System.Windows.Forms.Padding(7);
             this.Size = new System.Drawing.Size(476, 277);
+            this.Load += new System.EventHandler(GraphSettings_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkHeight)).EndInit();

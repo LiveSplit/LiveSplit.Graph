@@ -81,7 +81,6 @@ namespace LiveSplit.UI.Components
             chkShowBestSegments.CheckedChanged += chkShowBestSegments_CheckedChanged;
             cmbComparison.SelectedIndexChanged += cmbComparison_SelectedIndexChanged;
             cmbComparison.DataBindings.Add("SelectedItem", this, "Comparison", false, DataSourceUpdateMode.OnPropertyChanged);
-            this.Load += GraphSettings_Load;
         }
 
         void chkShowBestSegments_CheckedChanged(object sender, EventArgs e)
