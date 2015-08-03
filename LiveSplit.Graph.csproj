@@ -85,6 +85,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="UI\Components\GraphSettings.ja-JP.resx">
+      <DependentUpon>GraphSettings.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\Components\GraphSettings.resx">
       <DependentUpon>GraphSettings.cs</DependentUpon>
     </EmbeddedResource>
