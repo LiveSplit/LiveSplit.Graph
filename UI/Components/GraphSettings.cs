@@ -142,28 +142,38 @@ namespace LiveSplit.UI.Components
             }
         }
 
-        public XmlNode GetSettings (XmlDocument document)
+        public XmlNode GetSettings(XmlDocument document)
         {
             var parent = document.CreateElement("Settings");
-            parent.AppendChild(SettingsHelper.ToElement(document, "Version", "1.5"));
-            parent.AppendChild(SettingsHelper.ToElement(document, "Height", GraphHeight));
-            parent.AppendChild(SettingsHelper.ToElement(document, "Width", GraphWidth));
-            parent.AppendChild(SettingsHelper.ToElement(document, BehindGraphColor, "BehindGraphColor"));
-            parent.AppendChild(SettingsHelper.ToElement(document, AheadGraphColor, "AheadGraphColor"));
-            parent.AppendChild(SettingsHelper.ToElement(document, GridlinesColor, "GridlinesColor"));
-            parent.AppendChild(SettingsHelper.ToElement(document, PartialFillColorBehind, "PartialFillColorBehind"));
-            parent.AppendChild(SettingsHelper.ToElement(document, CompleteFillColorBehind, "CompleteFillColorBehind"));
-            parent.AppendChild(SettingsHelper.ToElement(document, PartialFillColorAhead, "PartialFillColorAhead"));
-            parent.AppendChild(SettingsHelper.ToElement(document, CompleteFillColorAhead, "CompleteFillColorAhead"));
-            parent.AppendChild(SettingsHelper.ToElement(document, GraphColor, "GraphColor"));
-            parent.AppendChild(SettingsHelper.ToElement(document, ShadowsColor, "ShadowsColor"));
-            parent.AppendChild(SettingsHelper.ToElement(document, GraphLinesColor, "GraphLinesColor"));
-            parent.AppendChild(SettingsHelper.ToElement(document, "LiveGraph", IsLiveGraph));
-            parent.AppendChild(SettingsHelper.ToElement(document, "FlipGraph", FlipGraph));
-            parent.AppendChild(SettingsHelper.ToElement(document, "Comparison", Comparison));
-            parent.AppendChild(SettingsHelper.ToElement(document, "ShowBestSegments", ShowBestSegments));
-            parent.AppendChild(SettingsHelper.ToElement(document, GraphGoldColor, "GraphGoldColor"));
+            CreateSettingsNode(document, parent);
             return parent;
+        }
+
+        public int GetSettingsHashCode()
+        {
+            return CreateSettingsNode(null, null);
+        }
+
+        private int CreateSettingsNode(XmlDocument document, XmlElement parent)
+        {
+            return SettingsHelper.CreateSetting(document, parent, "Version", "1.5") ^
+            SettingsHelper.CreateSetting(document, parent, "Height", GraphHeight) ^
+            SettingsHelper.CreateSetting(document, parent, "Width", GraphWidth) ^
+            SettingsHelper.CreateSetting(document, parent, "BehindGraphColor", BehindGraphColor) ^
+            SettingsHelper.CreateSetting(document, parent, "AheadGraphColor", AheadGraphColor) ^
+            SettingsHelper.CreateSetting(document, parent, "GridlinesColor", GridlinesColor) ^
+            SettingsHelper.CreateSetting(document, parent, "PartialFillColorBehind", PartialFillColorBehind) ^
+            SettingsHelper.CreateSetting(document, parent, "CompleteFillColorBehind", CompleteFillColorBehind) ^
+            SettingsHelper.CreateSetting(document, parent, "PartialFillColorAhead", PartialFillColorAhead) ^
+            SettingsHelper.CreateSetting(document, parent, "CompleteFillColorAhead", CompleteFillColorAhead) ^
+            SettingsHelper.CreateSetting(document, parent, "GraphColor", GraphColor) ^
+            SettingsHelper.CreateSetting(document, parent, "ShadowsColor", ShadowsColor) ^
+            SettingsHelper.CreateSetting(document, parent, "GraphLinesColor", GraphLinesColor) ^
+            SettingsHelper.CreateSetting(document, parent, "LiveGraph", IsLiveGraph) ^
+            SettingsHelper.CreateSetting(document, parent, "FlipGraph", FlipGraph) ^
+            SettingsHelper.CreateSetting(document, parent, "Comparison", Comparison) ^
+            SettingsHelper.CreateSetting(document, parent, "ShowBestSegments", ShowBestSegments) ^
+            SettingsHelper.CreateSetting(document, parent, "GraphGoldColor", GraphGoldColor);
         }
 
         public object Clone()
