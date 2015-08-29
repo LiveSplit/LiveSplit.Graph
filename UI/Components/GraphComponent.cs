@@ -106,7 +106,7 @@ namespace LiveSplit.UI.Components
                             - Middle);
             // Calculate Gridlines
             double gridValueX, gridValueY;
-            if (state.CurrentPhase != TimerPhase.NotRunning && FinalSplit.Value > TimeSpan.Zero)
+            if (state.CurrentPhase != TimerPhase.NotRunning && FinalSplit > TimeSpan.Zero)
             {
                 gridValueX = 1000;
                 while (FinalSplit.Value.TotalMilliseconds / gridValueX > width / 20)
