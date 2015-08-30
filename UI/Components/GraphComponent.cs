@@ -484,7 +484,7 @@ namespace LiveSplit.UI.Components
             if (Settings.IsLiveGraph)
             {
                 if (state.CurrentPhase != TimerPhase.NotRunning)
-                    FinalSplit = state.CurrentTime[state.CurrentTimingMethod];
+                    FinalSplit = state.CurrentTime[state.CurrentTimingMethod] ?? state.CurrentTime.RealTime;
             }
             else
             {
