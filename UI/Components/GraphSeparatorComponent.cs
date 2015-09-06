@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace LiveSplit.UI.Components
 {
@@ -14,27 +15,18 @@ namespace LiveSplit.UI.Components
 
         public bool LockToBottom { get; set; }
 
-        public float PaddingTop { get { return 0f; } }
-        public float PaddingBottom { get { return 0f; } }
-        public float PaddingLeft { get { return 0f; } }
-        public float PaddingRight { get { return 0f; } }
+        public float PaddingTop => 0f;
+        public float PaddingBottom => 0f;
+        public float PaddingLeft => 0f;
+        public float PaddingRight => 0f;
 
         public GraphicsCache Cache { get; set; }
 
-        public float VerticalHeight
-        {
-            get { return 1f; }
-        }
+        public float VerticalHeight => 1f;
 
-        public float MinimumWidth
-        {
-            get { return 0; }
-        }
+        public float MinimumWidth => 0f;
 
-        public IDictionary<string, Action> ContextMenuControls
-        {
-            get { return null; }
-        }
+        public IDictionary<string, Action> ContextMenuControls => null;
 
         public GraphSeparatorComponent(GraphSettings settings)
         {
@@ -62,35 +54,26 @@ namespace LiveSplit.UI.Components
             g.SmoothingMode = oldMode;
         }
 
-        public string ComponentName
-        {
-            get { return "Graph Separator"; }
-        }
+        public string ComponentName => "Graph Separator";
 
         public Control GetSettingsControl(LayoutMode mode)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        public System.Xml.XmlNode GetSettings(System.Xml.XmlDocument document)
+        public XmlNode GetSettings(XmlDocument document)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        public void SetSettings(System.Xml.XmlNode settings)
+        public void SetSettings(XmlNode settings)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        public float HorizontalWidth
-        {
-            get { return 1f; }
-        }
+        public float HorizontalWidth => 1f;
 
-        public float MinimumHeight
-        {
-            get { return 0; }
-        }
+        public float MinimumHeight => 0f;
 
         public void DrawHorizontal(Graphics g, LiveSplitState state, float height, Region clipRegion)
         {
@@ -109,26 +92,6 @@ namespace LiveSplit.UI.Components
             g.Clip = oldClip;
             g.Transform = oldMatrix;
             g.SmoothingMode = oldMode;
-        }
-
-        public string UpdateName
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public string XMLURL
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public string UpdateURL
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public Version Version
-        {
-            get { throw new NotImplementedException(); }
         }
 
         public void Update(IInvalidator invalidator, LiveSplitState state, float width, float height, LayoutMode mode)

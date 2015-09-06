@@ -33,7 +33,7 @@ namespace LiveSplit.UI.Components
 
         public LayoutMode Mode { get; set; }
 
-        public String Comparison { get; set; }
+        public string Comparison { get; set; }
         public LiveSplitState CurrentState { get; set; }
 
         public GraphSettings ()
@@ -180,17 +180,17 @@ namespace LiveSplit.UI.Components
         {
             return new GraphSettings()
             {
-                GraphHeight = this.GraphHeight,
-                BehindGraphColor = this.BehindGraphColor,
-                AheadGraphColor = this.AheadGraphColor,
-                GridlinesColor = this.GridlinesColor,
-                PartialFillColorBehind = this.PartialFillColorBehind,
-                CompleteFillColorBehind = this.CompleteFillColorBehind,
-                PartialFillColorAhead = this.PartialFillColorAhead,
-                CompleteFillColorAhead = this.CompleteFillColorAhead,
-                GraphColor = this.GraphColor,
-                ShadowsColor = this.ShadowsColor,
-                GraphLinesColor = this.GraphLinesColor
+                GraphHeight = GraphHeight,
+                BehindGraphColor = BehindGraphColor,
+                AheadGraphColor = AheadGraphColor,
+                GridlinesColor = GridlinesColor,
+                PartialFillColorBehind = PartialFillColorBehind,
+                CompleteFillColorBehind = CompleteFillColorBehind,
+                PartialFillColorAhead = PartialFillColorAhead,
+                CompleteFillColorAhead = CompleteFillColorAhead,
+                GraphColor = GraphColor,
+                ShadowsColor = ShadowsColor,
+                GraphLinesColor = GraphLinesColor
             };
         }
 

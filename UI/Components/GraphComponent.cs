@@ -10,10 +10,10 @@ namespace LiveSplit.UI.Components
 {
     public class GraphComponent : IComponent
     {
-        public float PaddingTop { get { return 0f; } }
-        public float PaddingLeft { get { return 0f; } }
-        public float PaddingBottom { get { return 0f; } }
-        public float PaddingRight { get { return 0f; } }
+        public float PaddingTop => 0f;
+        public float PaddingLeft => 0f;
+        public float PaddingBottom => 0f;
+        public float PaddingRight => 0f;
 
         public List<TimeSpan?> Deltas { get; set; }
         public TimeSpan? FinalSplit { get; set; }
@@ -24,30 +24,15 @@ namespace LiveSplit.UI.Components
 
         public GraphicsCache Cache { get; set; }
 
-        public float VerticalHeight
-        {
-            get { return Settings.GraphHeight; }
-        }
+        public float VerticalHeight => Settings.GraphHeight;
 
-        public float MinimumWidth
-        {
-            get { return 20; }
-        }
+        public float MinimumWidth => 20;
 
-        public float HorizontalWidth
-        {
-            get { return Settings.GraphWidth; }
-        }
+        public float HorizontalWidth => Settings.GraphWidth;
 
-        public float MinimumHeight
-        {
-            get { return 20; }
-        }
+        public float MinimumHeight => 20;
 
-        public IDictionary<string, Action> ContextMenuControls
-        {
-            get { return null; }
-        }
+        public IDictionary<string, Action> ContextMenuControls => null;
 
         public TimeSpan GraphEdgeValue { get; set; }
         public float GraphEdgeMin { get; set; }
@@ -461,17 +446,17 @@ namespace LiveSplit.UI.Components
 
         public Control GetSettingsControl(LayoutMode mode)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public System.Xml.XmlNode GetSettings(System.Xml.XmlDocument document)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public void SetSettings(System.Xml.XmlNode settings)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         protected void Calculate(LiveSplitState state)
