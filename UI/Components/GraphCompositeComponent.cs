@@ -58,7 +58,6 @@ namespace LiveSplit.UI.Components
             Settings.SetSettings(settings);
         }
 
-
         public System.Xml.XmlNode GetSettings(System.Xml.XmlDocument document)
         {
             return Settings.GetSettings(document);
@@ -107,6 +106,11 @@ namespace LiveSplit.UI.Components
 
         public void Dispose()
         {
+        }
+
+        public int GetSettingsHashCode()
+        {
+            return Settings.GetSettingsHashCode();
         }
     }
 }
