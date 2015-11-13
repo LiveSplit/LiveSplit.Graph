@@ -113,7 +113,7 @@ namespace LiveSplit.UI.Components
                 pointArray.Add(new PointF(0, middle));
                 circleList.Add(new PointF(widthOne, heightOne));
 
-                while (y < Deltas.Count - 1)
+                while (y < Deltas.Count)
                 {
                     while (Deltas[y] == null && y < Deltas.Count - 1)
                     {
