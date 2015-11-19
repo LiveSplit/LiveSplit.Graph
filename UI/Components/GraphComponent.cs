@@ -376,7 +376,7 @@ namespace LiveSplit.UI.Components
             if (Settings.ShowBestSegments)
             {
                 TimeSpan? curSegment;
-                curSegment = LiveSplitStateHelper.GetPreviousSegmentTime(state, splitNumber, comparison, method);
+                curSegment = LiveSplitStateHelper.GetPreviousSegmentTime(state, splitNumber, method);
                 if (curSegment != null)
                 {
                     if (state.Run[splitNumber].BestSegmentTime[method] == null || curSegment < state.Run[splitNumber].BestSegmentTime[method])
