@@ -151,12 +151,13 @@ namespace LiveSplit.UI.Components
                 //Skip i with the skipped splits, so that i is still correct
                 i += Deltas.Skip(i).TakeWhile(delta => delta == null).Count();
 
-                brush.Color = Settings.GraphColor;
-                if (CheckBestSegment(state, i, comparison, state.CurrentTimingMethod))
-                    brush.Color = Settings.GraphGoldColor;
+                pen.Color = brush.Color = Settings.GraphColor;
+                var finalDelta = circle.X == width && IsBestSegment;
+                if (!finalDelta && CheckBestSegment(state, i, comparison, state.CurrentTimingMethod))
+                    pen.Color = brush.Color = Settings.GraphGoldColor;
 
                 DrawLineShadowed(g, pen, previousCircle.X, previousCircle.Y, circle.X, circle.Y, Settings.FlipGraph);
-                if (circle.X != width || !IsBestSegment)
+                if (!finalDelta)
                     DrawEllipseShadowed(g, brush, circle.X - 2.5f, circle.Y - 2.5f, 5, 5, Settings.FlipGraph);
 
                 previousCircle = circle;
@@ -166,8 +167,6 @@ namespace LiveSplit.UI.Components
 
         private void AddGraphNode(Graphics g, LiveSplitState state, string comparison, Pen pen, List<PointF> circleList, float heightOne, float heightTwo, float widthOne, float widthTwo, int y)
         {
-            pen.Color = Settings.GraphColor;
-            if ((y != Deltas.Count - 1 || !IsBestSegment) && CheckBestSegment(state, y, comparison, state.CurrentTimingMethod)) pen.Color = Settings.GraphGoldColor;
             circleList.Add(new PointF(widthTwo, heightTwo));
         }
 
