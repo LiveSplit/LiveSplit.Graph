@@ -153,7 +153,7 @@ namespace LiveSplit.UI.Components
 
                 pen.Color = brush.Color = Settings.GraphColor;
                 var finalDelta = circle.X == width && IsBestSegment;
-                if (!finalDelta && CheckBestSegment(state, i, comparison, state.CurrentTimingMethod))
+                if (!finalDelta && CheckBestSegment(state, i, state.CurrentTimingMethod))
                     pen.Color = brush.Color = Settings.GraphGoldColor;
 
                 DrawLineShadowed(g, pen, previousCircle.X, previousCircle.Y, circle.X, circle.Y, Settings.FlipGraph);
@@ -370,17 +370,11 @@ namespace LiveSplit.UI.Components
             g.FillRectangle(brush, 0, Middle, width, GraphHeight * 2 - Middle);
         }
 
-        public bool CheckBestSegment(LiveSplitState state, int splitNumber, string comparison, TimingMethod method)
+        public bool CheckBestSegment(LiveSplitState state, int splitNumber, TimingMethod method)
         {
             if (Settings.ShowBestSegments)
             {
-                TimeSpan? curSegment;
-                curSegment = LiveSplitStateHelper.GetPreviousSegmentTime(state, splitNumber, method);
-                if (curSegment != null)
-                {
-                    if (state.Run[splitNumber].BestSegmentTime[method] == null || curSegment < state.Run[splitNumber].BestSegmentTime[method])
-                        return true;
-                }
+                return LiveSplitStateHelper.CheckBestSegment(state, splitNumber, method);
             }
             return false;
         }
@@ -519,14 +513,12 @@ namespace LiveSplit.UI.Components
             {
                 if (state.CurrentPhase == TimerPhase.Running || state.CurrentPhase == TimerPhase.Paused)
                 {
-                    TimeSpan? bestSeg = LiveSplitStateHelper.CheckLiveDelta(state, true, comparison, state.CurrentTimingMethod);
-                    if (bestSeg == null
-                            && (state.Run[state.CurrentSplitIndex].Comparisons[comparison][state.CurrentTimingMethod] != null &&
-                                    state.CurrentTime[state.CurrentTimingMethod]
-                                    - state.Run[state.CurrentSplitIndex].Comparisons[comparison][state.CurrentTimingMethod] > MinDelta))
+                    var bestSeg = LiveSplitStateHelper.CheckLiveDelta(state, true, comparison, state.CurrentTimingMethod);
+                    var curSplit = state.Run[state.CurrentSplitIndex].Comparisons[comparison][state.CurrentTimingMethod];
+                    var curTime = state.CurrentTime[state.CurrentTimingMethod];
+                    if (bestSeg == null && curSplit != null && curTime - curSplit > MinDelta)
                     {
-                        bestSeg = state.CurrentTime[state.CurrentTimingMethod]
-                                - state.Run[state.CurrentSplitIndex].Comparisons[comparison][state.CurrentTimingMethod];
+                        bestSeg = curTime - curSplit;
                     }
                     if (bestSeg != null)
                     {
