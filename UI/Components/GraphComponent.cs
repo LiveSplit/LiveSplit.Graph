@@ -141,27 +141,29 @@ namespace LiveSplit.UI.Components
 
         private void DrawCirclesAndLines(Graphics g, LiveSplitState state, float width, string comparison, Pen pen, SolidBrush brush, List<PointF> circleList)
         {
-            int i = 0;
+            int i = Deltas.Count - 1;
+
+            circleList.Reverse();
             var previousCircle = circleList.FirstOrDefault();
             if (previousCircle != null)
                 circleList.RemoveAt(0);
 
             foreach (var circle in circleList)
             {
-                //Skip i with the skipped splits, so that i is still correct
-                i += Deltas.Skip(i).TakeWhile(delta => delta == null).Count();
+                while (Deltas[i] == null)
+                    i--;
 
                 pen.Color = brush.Color = Settings.GraphColor;
-                var finalDelta = circle.X == width && IsBestSegment;
+                var finalDelta = previousCircle.X == width && IsBestSegment;
                 if (!finalDelta && CheckBestSegment(state, i, state.CurrentTimingMethod))
                     pen.Color = brush.Color = Settings.GraphGoldColor;
 
                 DrawLineShadowed(g, pen, previousCircle.X, previousCircle.Y, circle.X, circle.Y, Settings.FlipGraph);
                 if (!finalDelta)
-                    DrawEllipseShadowed(g, brush, circle.X - 2.5f, circle.Y - 2.5f, 5, 5, Settings.FlipGraph);
+                    DrawEllipseShadowed(g, brush, previousCircle.X - 2.5f, previousCircle.Y - 2.5f, 5, 5, Settings.FlipGraph);
 
                 previousCircle = circle;
-                i++;
+                i--;
             }
         }
 
@@ -488,21 +490,13 @@ namespace LiveSplit.UI.Components
             MinDelta = TimeSpan.Zero;
             for (int x = 0; x < state.Run.Count; x++)
             {
-                if (state.Run[x].SplitTime[state.CurrentTimingMethod] != null
-                        && state.Run[x].Comparisons[comparison][state.CurrentTimingMethod] != null)
-                {
-                    TimeSpan time = state.Run[x].SplitTime[state.CurrentTimingMethod].Value
-                            - state.Run[x].Comparisons[comparison][state.CurrentTimingMethod].Value;
-                    if (time > MaxDelta)
-                        MaxDelta = time;
-                    if (time < MinDelta)
-                        MinDelta = time;
-                    Deltas.Add(time);
-                }
-                else
-                {
-                    Deltas.Add(null);
-                }
+                var time = state.Run[x].SplitTime[state.CurrentTimingMethod]
+                        - state.Run[x].Comparisons[comparison][state.CurrentTimingMethod];
+                if (time > MaxDelta)
+                    MaxDelta = time.Value;
+                if (time < MinDelta)
+                    MinDelta = time.Value;
+                Deltas.Add(time);
             }
         }
 
