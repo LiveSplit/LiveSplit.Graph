@@ -204,7 +204,11 @@ namespace LiveSplit.UI.Components
             }
             else
             {
-                var ratio = (heightOne - Middle) / (heightOne - heightTwo);
+                float ratio = (heightOne - Middle) / (heightOne - heightTwo);
+                if (float.IsNaN(ratio))
+                {
+                    ratio = 0.0f;
+                }
                 AddFillFirstHalf(g, TotalDelta, Middle, brush, heightOne, widthOne, widthTwo, y, pointArray, ratio);
                 AddFillSecondHalf(g, TotalDelta, Middle, brush, heightTwo, widthOne, widthTwo, y, pointArray, ratio);
             }
