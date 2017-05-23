@@ -20,7 +20,7 @@ namespace LiveSplit.UI.Components
         public TimeSpan MaxDelta { get; set; }
         public TimeSpan MinDelta { get; set; }
 
-        public bool IsBestSegment { get; set; }
+        public bool IsLiveDeltaActive { get; set; }
 
         public GraphicsCache Cache { get; set; }
 
@@ -154,7 +154,7 @@ namespace LiveSplit.UI.Components
                     i--;
 
                 pen.Color = brush.Color = Settings.GraphColor;
-                var finalDelta = previousCircle.X == width && IsBestSegment;
+                var finalDelta = previousCircle.X == width && IsLiveDeltaActive;
                 if (!finalDelta && CheckBestSegment(state, i, state.CurrentTimingMethod))
                     pen.Color = brush.Color = Settings.GraphGoldColor;
 
@@ -185,7 +185,7 @@ namespace LiveSplit.UI.Components
 
         private void CalculateRightSideCoordinates(LiveSplitState state, float width, TimeSpan TotalDelta, float graphEdge, float GraphHeight, ref float heightTwo, ref float widthTwo, int y)
         {
-            if (y == Deltas.Count - 1 && IsBestSegment)
+            if (y == Deltas.Count - 1 && IsLiveDeltaActive)
                 widthTwo = width;
             else if (state.Run[y].SplitTime[state.CurrentTimingMethod] != null)
                 widthTwo = (float)((state.Run[y].SplitTime[state.CurrentTimingMethod].Value.TotalMilliseconds / FinalSplit.Value.TotalMilliseconds) * (width));
@@ -232,7 +232,7 @@ namespace LiveSplit.UI.Components
         // Adds to the point array the second portion of the fill if the graph goes from ahead to behind or vice versa
         private void AddFillSecondHalf(Graphics g, TimeSpan TotalDelta, float Middle, SolidBrush brush, float heightTwo, float widthOne, float widthTwo, int y, List<PointF> pointArray, float ratio)
         {
-            if (y == Deltas.Count - 1 && IsBestSegment)
+            if (y == Deltas.Count - 1 && IsLiveDeltaActive)
             {
                 brush.Color = heightTwo > Middle ? Settings.PartialFillColorAhead : Settings.PartialFillColorBehind;
                 if (TotalDelta != TimeSpan.Zero)
@@ -257,7 +257,7 @@ namespace LiveSplit.UI.Components
         // Adds to the point array the first portion of the fill if the graph goes from ahead to behind or vice versa
         private void AddFillFirstHalf(Graphics g, TimeSpan TotalDelta, float Middle, SolidBrush brush, float heightOne, float widthOne, float widthTwo, int y, List<PointF> pointArray, float ratio)
         {
-            if (y == Deltas.Count - 1 && IsBestSegment)
+            if (y == Deltas.Count - 1 && IsLiveDeltaActive)
             {
                 brush.Color = heightOne > Middle ? Settings.PartialFillColorAhead : Settings.PartialFillColorBehind;
                 if (TotalDelta != TimeSpan.Zero)
@@ -282,7 +282,7 @@ namespace LiveSplit.UI.Components
         // Adds to the point array the fill under the graph if the current portion of the graph is either completely ahead or completely behind
         private void AddFillOneSide(Graphics g, float Middle, SolidBrush brush, float heightOne, float heightTwo, float widthOne, float widthTwo, int y, List<PointF> pointArray)
         {
-            if (y == Deltas.Count - 1 && IsBestSegment)
+            if (y == Deltas.Count - 1 && IsLiveDeltaActive)
             {
                 brush.Color = heightTwo > Middle ? Settings.PartialFillColorAhead : Settings.PartialFillColorBehind;
                 g.FillPolygon(brush, new PointF[]
@@ -506,7 +506,7 @@ namespace LiveSplit.UI.Components
 
         private void CheckLiveSegmentDelta(LiveSplitState state, string comparison)
         {
-            IsBestSegment = false;
+            IsLiveDeltaActive = false;
             if (Settings.IsLiveGraph)
             {
                 if (state.CurrentPhase == TimerPhase.Running || state.CurrentPhase == TimerPhase.Paused)
@@ -525,7 +525,7 @@ namespace LiveSplit.UI.Components
                         if (bestSeg < MinDelta)
                             MinDelta = bestSeg.Value;
                         Deltas.Add(bestSeg);
-                        IsBestSegment = true;
+                        IsLiveDeltaActive = true;
                     }
                 }
             }
@@ -537,7 +537,7 @@ namespace LiveSplit.UI.Components
 
             Cache.Restart();
             Cache["FinalSplit"] = FinalSplit.ToString();
-            Cache["IsBestSegment"] = IsBestSegment;
+            Cache["IsLiveDeltaActive"] = IsLiveDeltaActive;
             Cache["DeltasCount"] = Deltas.Count;
             for (var ind = 0; ind < Deltas.Count; ind++)
             {
