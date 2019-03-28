@@ -511,7 +511,7 @@ namespace LiveSplit.UI.Components
             {
                 if (state.CurrentPhase == TimerPhase.Running || state.CurrentPhase == TimerPhase.Paused)
                 {
-                    var bestSeg = LiveSplitStateHelper.CheckLiveDelta(state, true, comparison, state.CurrentTimingMethod);
+                    var bestSeg = LiveSplitStateHelper.CheckLiveDelta(state, true, comparison, state.CurrentTimingMethod, false);
                     var curSplit = state.Run[state.CurrentSplitIndex].Comparisons[comparison][state.CurrentTimingMethod];
                     var curTime = state.CurrentTime[state.CurrentTimingMethod];
                     if (bestSeg == null && curSplit != null && curTime - curSplit > MinDelta)
