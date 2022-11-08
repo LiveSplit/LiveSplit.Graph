@@ -86,6 +86,8 @@ namespace LiveSplit.UI.Components
         }
         void GraphSettings_Load(object sender, EventArgs e)
         {
+            chkShowBestSegments_CheckedChanged(null, null);
+
             cmbComparison.Items.Clear();
             cmbComparison.Items.Add("Current Comparison");
             cmbComparison.Items.AddRange(CurrentState.Run.Comparisons.Where(x => x != BestSplitTimesComparisonGenerator.ComparisonName && x != NoneComparisonGenerator.ComparisonName).ToArray());
