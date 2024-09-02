@@ -256,7 +256,7 @@ public class GraphComponent : IComponent
         pointArray.Add(new PointF(pointArray.Last().X, Middle));
         if (pointArray.Count > 1)
         {
-            brush.Color = pointArray[pointArray.Count - 2].Y > Middle ? Settings.CompleteFillColorAhead : Settings.CompleteFillColorBehind;
+            brush.Color = pointArray[^2].Y > Middle ? Settings.CompleteFillColorAhead : Settings.CompleteFillColorBehind;
             g.FillPolygon(brush, pointArray.ToArray());
         }
     }
