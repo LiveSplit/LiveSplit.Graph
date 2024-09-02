@@ -72,7 +72,7 @@ public class GraphCompositeComponent : IComponent
 
     public float MinimumHeight => InternalComponent.MinimumHeight;
 
-    public void DrawHorizontal(System.Drawing.Graphics g, LiveSplitState state, float height, Region clipRegion)
+    public void DrawHorizontal(Graphics g, LiveSplitState state, float height, Region clipRegion)
     {
         InternalComponent.DrawHorizontal(g, state, height, clipRegion);
     }
@@ -81,7 +81,7 @@ public class GraphCompositeComponent : IComponent
 
     public float MinimumWidth => InternalComponent.MinimumWidth;
 
-    public void DrawVertical(System.Drawing.Graphics g, LiveSplitState state, float width, Region clipRegion)
+    public void DrawVertical(Graphics g, LiveSplitState state, float width, Region clipRegion)
     {
         InternalComponent.DrawVertical(g, state, width, clipRegion);
     }
