@@ -559,7 +559,7 @@ public class GraphComponent : IComponent
         IsLiveDeltaActive = false;
         if (Settings.IsLiveGraph)
         {
-            if (state.CurrentPhase == TimerPhase.Running || state.CurrentPhase == TimerPhase.Paused)
+            if (state.CurrentPhase is TimerPhase.Running or TimerPhase.Paused)
             {
                 var bestSeg = LiveSplitStateHelper.CheckLiveDelta(state, true, comparison, state.CurrentTimingMethod);
                 var curSplit = state.Run[state.CurrentSplitIndex].Comparisons[comparison][state.CurrentTimingMethod];
