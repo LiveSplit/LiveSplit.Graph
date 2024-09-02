@@ -74,14 +74,12 @@ public class GraphComponent : IComponent
 
         TimeSpan TotalDelta = MinDelta - MaxDelta;
 
-        float graphEdge, graphHeight, middle;
-        CalculateMiddleAndGraphEdge(height, TotalDelta, out graphEdge, out graphHeight, out middle);
+        CalculateMiddleAndGraphEdge(height, TotalDelta, out float graphEdge, out float graphHeight, out float middle);
 
         var brush = new SolidBrush(Settings.GraphColor);
         DrawGreenAndRedGraphPortions(g, width, graphHeight, middle, brush);
 
-        double gridValueX, gridValueY;
-        CalculateGridlines(state, width, TotalDelta, graphEdge, graphHeight, out gridValueX, out gridValueY);
+        CalculateGridlines(state, width, TotalDelta, graphEdge, graphHeight, out double gridValueX, out double gridValueY);
 
         var pen = new Pen(Settings.GridlinesColor, 2.0f);
         DrawGridlines(g, width, graphHeight, middle, gridValueX, gridValueY, pen);
