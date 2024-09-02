@@ -53,7 +53,7 @@ public class GraphComponent : IComponent
 
     private void DrawGeneral(Graphics g, LiveSplitState state, float width, float height)
     {
-        var oldMatrix = g.Transform;
+        System.Drawing.Drawing2D.Matrix oldMatrix = g.Transform;
         if (Settings.FlipGraph)
         {
             g.ScaleTransform(1, -1);
@@ -66,7 +66,7 @@ public class GraphComponent : IComponent
 
     private void DrawUnflipped(Graphics g, LiveSplitState state, float width, float height)
     {
-        var comparison = Settings.Comparison == "Current Comparison" ? state.CurrentComparison : Settings.Comparison;
+        string comparison = Settings.Comparison == "Current Comparison" ? state.CurrentComparison : Settings.Comparison;
         if (!state.Run.Comparisons.Contains(comparison))
         {
             comparison = state.CurrentComparison;
@@ -116,7 +116,7 @@ public class GraphComponent : IComponent
 
             var pointArray = new List<PointF>
             {
-                new PointF(0, middle)
+                new(0, middle)
             };
             circleList.Add(new PointF(widthOne, heightOne));
 
@@ -151,13 +151,13 @@ public class GraphComponent : IComponent
         int i = Deltas.Count - 1;
 
         circleList.Reverse();
-        var previousCircle = circleList.FirstOrDefault();
+        PointF previousCircle = circleList.FirstOrDefault();
         if (previousCircle != null)
         {
             circleList.RemoveAt(0);
         }
 
-        foreach (var circle in circleList)
+        foreach (PointF circle in circleList)
         {
             while (Deltas[i] == null)
             {
@@ -165,7 +165,7 @@ public class GraphComponent : IComponent
             }
 
             pen.Color = brush.Color = Settings.GraphColor;
-            var finalDelta = previousCircle.X == width && IsLiveDeltaActive;
+            bool finalDelta = previousCircle.X == width && IsLiveDeltaActive;
             if (!finalDelta && CheckBestSegment(state, i, state.CurrentTimingMethod))
             {
                 pen.Color = brush.Color = Settings.GraphGoldColor;
@@ -271,9 +271,9 @@ public class GraphComponent : IComponent
             {
                 g.FillPolygon(brush, new PointF[]
                 {
-                    new PointF(widthOne+((widthTwo-widthOne)*ratio), Middle),
-                    new PointF(widthTwo, heightTwo),
-                    new PointF(widthTwo, Middle)
+                    new(widthOne+((widthTwo-widthOne)*ratio), Middle),
+                    new(widthTwo, heightTwo),
+                    new(widthTwo, Middle)
                 });
             }
         }
@@ -296,9 +296,9 @@ public class GraphComponent : IComponent
             {
                 g.FillPolygon(brush, new PointF[]
                 {
-                    new PointF(widthOne, Middle),
-                    new PointF(widthOne, heightOne),
-                    new PointF(widthOne+((widthTwo-widthOne)*ratio), Middle)
+                    new(widthOne, Middle),
+                    new(widthOne, heightOne),
+                    new(widthOne+((widthTwo-widthOne)*ratio), Middle)
                 });
             }
         }
@@ -319,10 +319,10 @@ public class GraphComponent : IComponent
             brush.Color = heightTwo > Middle ? Settings.PartialFillColorAhead : Settings.PartialFillColorBehind;
             g.FillPolygon(brush, new PointF[]
             {
-                 new PointF(widthOne, Middle),
-                 new PointF(widthOne, heightOne),
-                 new PointF(widthTwo, heightTwo),
-                 new PointF(widthTwo, Middle)
+                 new(widthOne, Middle),
+                 new(widthOne, heightOne),
+                 new(widthTwo, heightTwo),
+                 new(widthTwo, Middle)
             });
         }
         else
@@ -496,7 +496,7 @@ public class GraphComponent : IComponent
 
     protected void Calculate(LiveSplitState state)
     {
-        var comparison = Settings.Comparison == "Current Comparison" ? state.CurrentComparison : Settings.Comparison;
+        string comparison = Settings.Comparison == "Current Comparison" ? state.CurrentComparison : Settings.Comparison;
         if (!state.Run.Comparisons.Contains(comparison))
         {
             comparison = state.CurrentComparison;
@@ -519,7 +519,7 @@ public class GraphComponent : IComponent
         }
         else
         {
-            foreach (var segment in state.Run)
+            foreach (ISegment segment in state.Run)
             {
                 if (segment.SplitTime[state.CurrentTimingMethod] != null)
                 {
@@ -536,7 +536,7 @@ public class GraphComponent : IComponent
         MinDelta = TimeSpan.Zero;
         for (int x = 0; x < state.Run.Count; x++)
         {
-            var time = state.Run[x].SplitTime[state.CurrentTimingMethod]
+            TimeSpan? time = state.Run[x].SplitTime[state.CurrentTimingMethod]
                     - state.Run[x].Comparisons[comparison][state.CurrentTimingMethod];
             if (time > MaxDelta)
             {
@@ -559,9 +559,9 @@ public class GraphComponent : IComponent
         {
             if (state.CurrentPhase is TimerPhase.Running or TimerPhase.Paused)
             {
-                var bestSeg = LiveSplitStateHelper.CheckLiveDelta(state, true, comparison, state.CurrentTimingMethod);
-                var curSplit = state.Run[state.CurrentSplitIndex].Comparisons[comparison][state.CurrentTimingMethod];
-                var curTime = state.CurrentTime[state.CurrentTimingMethod];
+                TimeSpan? bestSeg = LiveSplitStateHelper.CheckLiveDelta(state, true, comparison, state.CurrentTimingMethod);
+                TimeSpan? curSplit = state.Run[state.CurrentSplitIndex].Comparisons[comparison][state.CurrentTimingMethod];
+                TimeSpan? curTime = state.CurrentTime[state.CurrentTimingMethod];
                 if (bestSeg == null && curSplit != null && curTime - curSplit > MinDelta)
                 {
                     bestSeg = curTime - curSplit;
@@ -594,7 +594,7 @@ public class GraphComponent : IComponent
         Cache["FinalSplit"] = FinalSplit.ToString();
         Cache["IsLiveDeltaActive"] = IsLiveDeltaActive;
         Cache["DeltasCount"] = Deltas.Count;
-        for (var ind = 0; ind < Deltas.Count; ind++)
+        for (int ind = 0; ind < Deltas.Count; ind++)
         {
             Cache["Deltas" + ind] = Deltas[ind] == null ? "null" : Deltas[ind].ToString();
         }
