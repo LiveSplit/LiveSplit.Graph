@@ -45,7 +45,7 @@ public class GraphComponent : IComponent
         GraphEdgeMin = 5;
         Settings = settings;
         Cache = new GraphicsCache();
-        Deltas = new List<TimeSpan?>();
+        Deltas = [];
         FinalSplit = TimeSpan.Zero;
         MaxDelta = TimeSpan.Zero;
         MinDelta = TimeSpan.Zero;
@@ -116,8 +116,10 @@ public class GraphComponent : IComponent
             float widthTwo = 0;
             int y = 0;
 
-            var pointArray = new List<PointF>();
-            pointArray.Add(new PointF(0, middle));
+            var pointArray = new List<PointF>
+            {
+                new PointF(0, middle)
+            };
             circleList.Add(new PointF(widthOne, heightOne));
 
             while (y < Deltas.Count)
@@ -531,7 +533,7 @@ public class GraphComponent : IComponent
 
     private void CalculateDeltas(LiveSplitState state, string comparison)
     {
-        Deltas = new List<TimeSpan?>();
+        Deltas = [];
         MaxDelta = TimeSpan.Zero;
         MinDelta = TimeSpan.Zero;
         for (int x = 0; x < state.Run.Count; x++)

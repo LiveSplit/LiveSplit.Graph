@@ -27,10 +27,12 @@ public class GraphCompositeComponent : IComponent
             CurrentState = state
         };
         InternalComponent = new ComponentRendererComponent();
-        var components = new List<IComponent>();
-        components.Add(new GraphSeparatorComponent(Settings) { LockToBottom = true });
-        components.Add(new GraphComponent(Settings));
-        components.Add(new GraphSeparatorComponent(Settings) { LockToBottom = false });
+        var components = new List<IComponent>
+        {
+            new GraphSeparatorComponent(Settings) { LockToBottom = true },
+            new GraphComponent(Settings),
+            new GraphSeparatorComponent(Settings) { LockToBottom = false }
+        };
         InternalComponent.VisibleComponents = components;
         state.ComparisonRenamed += state_ComparisonRenamed;
     }
