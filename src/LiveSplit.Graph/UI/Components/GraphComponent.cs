@@ -436,13 +436,7 @@ public class GraphComponent : IComponent
         }
     }
 
-    public string ComponentName
-    {
-        get
-        {
-            throw new NotImplementedException();
-        }
-    }
+    public string ComponentName => throw new NotImplementedException();
 
     public Control GetSettingsControl(LayoutMode mode)
     {

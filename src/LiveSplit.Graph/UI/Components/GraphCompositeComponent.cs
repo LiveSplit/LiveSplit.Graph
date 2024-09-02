@@ -94,5 +94,8 @@ public class GraphCompositeComponent : IComponent
     {
     }
 
-    public int GetSettingsHashCode() => Settings.GetSettingsHashCode();
+    public int GetSettingsHashCode()
+    {
+        return Settings.GetSettingsHashCode();
+    }
 }

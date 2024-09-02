@@ -15,7 +15,10 @@ public class GraphFactory : IComponentFactory
 
     public ComponentCategory Category => ComponentCategory.Media;
 
-    public IComponent Create(LiveSplitState state) => new GraphCompositeComponent(state);
+    public IComponent Create(LiveSplitState state)
+    {
+        return new GraphCompositeComponent(state);
+    }
 
     public string UpdateName => ComponentName;
 

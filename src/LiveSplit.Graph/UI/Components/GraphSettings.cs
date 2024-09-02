@@ -12,9 +12,9 @@ namespace LiveSplit.UI.Components;
 public partial class GraphSettings : UserControl, ICloneable
 {
     public float GraphHeight { get; set; }
-    public float GraphHeightScaled { get { return GraphHeight / 5; } set { GraphHeight = value * 5; } }
+    public float GraphHeightScaled { get => GraphHeight / 5; set => GraphHeight = value * 5; }
     public float GraphWidth { get; set; }
-    public float GraphWidthScaled { get { return GraphWidth / 10; } set { GraphWidth = value * 10; } }
+    public float GraphWidthScaled { get => GraphWidth / 10; set => GraphWidth = value * 10; }
 
     public Color BehindGraphColor { get; set; }
     public Color AheadGraphColor { get; set; }
