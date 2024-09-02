@@ -77,15 +77,17 @@ public partial class GraphSettings : UserControl, ICloneable
         cmbComparison.DataBindings.Add("SelectedItem", this, "Comparison", false, DataSourceUpdateMode.OnPropertyChanged);
     }
 
-    void chkShowBestSegments_CheckedChanged(object sender, EventArgs e)
+    private void chkShowBestSegments_CheckedChanged(object sender, EventArgs e)
     {
         btnBestSegmentColor.Enabled = lblBestSegmentColor.Enabled = chkShowBestSegments.Checked;
     }
-    void cmbComparison_SelectedIndexChanged(object sender, EventArgs e)
+
+    private void cmbComparison_SelectedIndexChanged(object sender, EventArgs e)
     {
         Comparison = cmbComparison.SelectedItem.ToString();
     }
-    void GraphSettings_Load(object sender, EventArgs e)
+
+    private void GraphSettings_Load(object sender, EventArgs e)
     {
         chkShowBestSegments_CheckedChanged(null, null);
 
