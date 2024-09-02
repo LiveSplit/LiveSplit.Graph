@@ -87,7 +87,9 @@ public class GraphCompositeComponent : IComponent
     public void Update(IInvalidator invalidator, LiveSplitState state, float width, float height, LayoutMode mode)
     {
         if (invalidator != null)
+        {
             InternalComponent.Update(invalidator, state, width, height, mode);
+        }
     }
 
     public void Dispose()

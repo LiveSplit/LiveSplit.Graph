@@ -95,7 +95,10 @@ public partial class GraphSettings : UserControl, ICloneable
         cmbComparison.Items.Add("Current Comparison");
         cmbComparison.Items.AddRange(CurrentState.Run.Comparisons.Where(x => x != BestSplitTimesComparisonGenerator.ComparisonName && x != NoneComparisonGenerator.ComparisonName).ToArray());
         if (!cmbComparison.Items.Contains(Comparison))
+        {
             cmbComparison.Items.Add(Comparison);
+        }
+
         if (Mode == LayoutMode.Vertical)
         {
             trkHeight.DataBindings.Clear();
