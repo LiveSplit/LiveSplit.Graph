@@ -72,21 +72,21 @@ public class GraphComponent : IComponent
             comparison = state.CurrentComparison;
         }
 
-        TimeSpan TotalDelta = MinDelta - MaxDelta;
+        TimeSpan totalDelta = MinDelta - MaxDelta;
 
-        CalculateMiddleAndGraphEdge(height, TotalDelta, out float graphEdge, out float graphHeight, out float middle);
+        CalculateMiddleAndGraphEdge(height, totalDelta, out float graphEdge, out float graphHeight, out float middle);
 
         var brush = new SolidBrush(Settings.GraphColor);
         DrawGreenAndRedGraphPortions(g, width, graphHeight, middle, brush);
 
-        CalculateGridlines(state, width, TotalDelta, graphEdge, graphHeight, out double gridValueX, out double gridValueY);
+        CalculateGridlines(state, width, totalDelta, graphEdge, graphHeight, out double gridValueX, out double gridValueY);
 
         var pen = new Pen(Settings.GridlinesColor, 2.0f);
         DrawGridlines(g, width, graphHeight, middle, gridValueX, gridValueY, pen);
 
         try
         {
-            DrawGraph(g, state, width, comparison, TotalDelta, graphEdge, graphHeight, middle, brush, pen);
+            DrawGraph(g, state, width, comparison, totalDelta, graphEdge, graphHeight, middle, brush, pen);
         }
         catch (Exception ex)
         {
