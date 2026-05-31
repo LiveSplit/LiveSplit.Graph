@@ -1,10 +1,9 @@
-﻿using System;
+﻿using LiveSplit.Model;
+using LiveSplit.Model.Comparisons;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-
-using LiveSplit.Model;
-using LiveSplit.Model.Comparisons;
 
 namespace LiveSplit.UI.Components;
 

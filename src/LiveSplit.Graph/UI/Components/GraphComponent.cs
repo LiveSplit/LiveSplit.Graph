@@ -1,11 +1,10 @@
-﻿using System;
+﻿using LiveSplit.Model;
+using LiveSplit.Options;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-
-using LiveSplit.Model;
-using LiveSplit.Options;
 
 namespace LiveSplit.UI.Components;
 
@@ -189,15 +188,10 @@ public class GraphComponent : IComponent
 
     private void CalculateLeftSideCoordinates(LiveSplitState state, float width, TimeSpan TotalDelta, float graphEdge, float GraphHeight, ref float heightOne, ref float widthOne, int y)
     {
-        if (TotalDelta != TimeSpan.Zero)
-        {
-            heightOne = ((float)((Deltas[y].Value.TotalMilliseconds - MaxDelta.TotalMilliseconds) / TotalDelta.TotalMilliseconds)
+        heightOne = TotalDelta == TimeSpan.Zero
+            ? GraphHeight
+            : ((float)((Deltas[y].Value.TotalMilliseconds - MaxDelta.TotalMilliseconds) / TotalDelta.TotalMilliseconds)
                 * (GraphHeight - graphEdge) * 2) + graphEdge;
-        }
-        else
-        {
-            heightOne = GraphHeight;
-        }
 
         if (y != Deltas.Count - 1 && state.Run[y].SplitTime[state.CurrentTimingMethod] != null)
         {
@@ -216,15 +210,10 @@ public class GraphComponent : IComponent
             widthTwo = (float)(state.Run[y].SplitTime[state.CurrentTimingMethod].Value.TotalMilliseconds / FinalSplit.Value.TotalMilliseconds * width);
         }
 
-        if (TotalDelta != TimeSpan.Zero)
-        {
-            heightTwo = (float)(((Deltas[y].Value.TotalMilliseconds - MaxDelta.TotalMilliseconds) / TotalDelta.TotalMilliseconds
-                * (GraphHeight - graphEdge) * 2) + graphEdge);
-        }
-        else
-        {
-            heightTwo = GraphHeight;
-        }
+        heightTwo = TotalDelta != TimeSpan.Zero
+            ? (float)(((Deltas[y].Value.TotalMilliseconds - MaxDelta.TotalMilliseconds) / TotalDelta.TotalMilliseconds
+                * (GraphHeight - graphEdge) * 2) + graphEdge)
+            : GraphHeight;
     }
 
     private void DrawFillBeneathGraph(Graphics g, TimeSpan TotalDelta, float Middle, SolidBrush brush, float heightOne, float heightTwo, float widthOne, float widthTwo, int y, List<PointF> pointArray)
@@ -253,7 +242,7 @@ public class GraphComponent : IComponent
 
     private void DrawFinalPolygon(Graphics g, float Middle, SolidBrush brush, List<PointF> pointArray)
     {
-        pointArray.Add(new PointF(pointArray.Last().X, Middle));
+        pointArray.Add(new PointF(pointArray[^1].X, Middle));
         if (pointArray.Count > 1)
         {
             brush.Color = pointArray[^2].Y > Middle ? Settings.CompleteFillColorAhead : Settings.CompleteFillColorBehind;
@@ -319,10 +308,10 @@ public class GraphComponent : IComponent
             brush.Color = heightTwo > Middle ? Settings.PartialFillColorAhead : Settings.PartialFillColorBehind;
             g.FillPolygon(brush, new PointF[]
             {
-                 new(widthOne, Middle),
-                 new(widthOne, heightOne),
-                 new(widthTwo, heightTwo),
-                 new(widthTwo, Middle)
+                new(widthOne, Middle),
+                new(widthOne, heightOne),
+                new(widthTwo, heightTwo),
+                new(widthTwo, Middle)
             });
         }
         else
@@ -337,9 +326,7 @@ public class GraphComponent : IComponent
         {
             for (double x = gridValueX; x < width; x += gridValueX)
             {
-                g.DrawLine(pen, (float)x,
-                        0, (float)x,
-                        GraphHeight * 2);
+                g.DrawLine(pen, (float)x, 0, (float)x, GraphHeight * 2);
             }
         }
 
@@ -371,8 +358,7 @@ public class GraphComponent : IComponent
         {
             graphEdge = (float)(GraphEdgeValue.TotalMilliseconds / (-TotalDelta.TotalMilliseconds + (GraphEdgeValue.TotalMilliseconds * 2)) * ((graphHeight * 2) - (GraphEdgeMin * 2)));
             graphEdge += GraphEdgeMin;
-            middle = (float)((-(MaxDelta.TotalMilliseconds / TotalDelta.TotalMilliseconds)
-                    * (graphHeight - graphEdge) * 2) + graphEdge);
+            middle = (float)((-(MaxDelta.TotalMilliseconds / TotalDelta.TotalMilliseconds) * (graphHeight - graphEdge) * 2) + graphEdge);
         }
     }
 
@@ -536,8 +522,7 @@ public class GraphComponent : IComponent
         MinDelta = TimeSpan.Zero;
         for (int x = 0; x < state.Run.Count; x++)
         {
-            TimeSpan? time = state.Run[x].SplitTime[state.CurrentTimingMethod]
-                    - state.Run[x].Comparisons[comparison][state.CurrentTimingMethod];
+            TimeSpan? time = state.Run[x].SplitTime[state.CurrentTimingMethod] - state.Run[x].Comparisons[comparison][state.CurrentTimingMethod];
             if (time > MaxDelta)
             {
                 MaxDelta = time.Value;
